@@ -106,6 +106,8 @@ scripts/         Regression checks and verification utilities
 
 `npm run build` generates `dist/`. The included `wrangler.jsonc` supports Cloudflare Workers static assets with single-page application routing. Authenticated deployment uses `npx wrangler deploy` after Cloudflare login.
 
+For Cloudflare Git builds, set the build command to `npm run build` and the deploy command to `npx wrangler deploy`. Add `VITE_CONVEX_URL` and `VITE_CLERK_PUBLISHABLE_KEY` under **Build variables and secrets** before the build runs. A runtime-only variable cannot change the generated frontend bundle. Rebuild after changing either value.
+
 Use your own frontend environment variables when building. Configure Clerk for the hosted domain and connect the intended Convex deployment. Temporary preview URLs from development sessions can expire.
 
 ## Credentials, attribution, and media
