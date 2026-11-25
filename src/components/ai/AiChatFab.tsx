@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import {
   X, Plus, Clock, Trash2, ChevronLeft, Coffee,
@@ -25,6 +25,30 @@ function ChatWidget() {
   const [draftKey, setDraftKey] = useState(0);
   const { isSignedIn } = useUser();
   const panelRef = useRef<HTMLDivElement>(null);
+  const [viewport, setViewport] = useState({ height: window.innerHeight, top: 0 });
+
+  // Mobile browsers resize the visual viewport when the keyboard opens.
+  useEffect(() => {
+    if (!open) return;
+    const visual = window.visualViewport;
+    const update = () => setViewport({ height: visual?.height ?? window.innerHeight, top: visual?.offsetTop ?? 0 });
+    update();
+    visual?.addEventListener("resize", update);
+    visual?.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
+    const mobile = window.matchMedia("(max-width: 639px)");
+    const previousOverflow = document.body.style.overflow;
+    const lockScroll = () => { document.body.style.overflow = mobile.matches ? "hidden" : previousOverflow; };
+    lockScroll();
+    mobile.addEventListener("change", lockScroll);
+    return () => {
+      visual?.removeEventListener("resize", update);
+      visual?.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      mobile.removeEventListener("change", lockScroll);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
 
   const threads = useQuery(
     api.ai.userChat.getAllMyThreads,
@@ -84,7 +108,9 @@ function ChatWidget() {
   const content = (
     <div
       ref={panelRef}
-      className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-[max(0.75rem,env(safe-area-inset-right))] z-[400] sm:bottom-6 sm:right-6 flex flex-col items-end gap-3"
+      className="ai-widget fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] right-[max(0.75rem,env(safe-area-inset-right))] z-[400] sm:bottom-6 sm:right-6 flex flex-col items-end gap-3"
+      data-open={open}
+      style={{ "--chat-viewport-height": `${viewport.height}px`, "--chat-viewport-top": `${viewport.top}px` } as CSSProperties}
     >
       {/* ── Chat panel ── */}
       <AnimatePresence>
@@ -94,14 +120,13 @@ function ChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.93, y: 20 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="flex w-[min(420px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-3xl bg-white shadow-[0_24px_64px_rgba(0,0,0,0.18)] ring-1 ring-black/8"
-            style={{ height: "min(600px, calc(100dvh - 100px - env(safe-area-inset-bottom)))" }}
+            className="ai-dialog flex w-[min(420px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-3xl bg-white shadow-[0_24px_64px_rgba(0,0,0,0.18)] ring-1 ring-black/8"
             role="dialog"
             aria-label="Kafe Eman AI Assistant"
           >
             {/* Header */}
             <div
-              className="relative flex items-center gap-3 px-4 py-3.5 shrink-0"
+              className="ai-chat-header relative flex items-center gap-2 px-4 py-3 shrink-0"
               style={{
                 background: "linear-gradient(135deg, #192b22 0%, #354937 100%)",
               }}            >
@@ -122,8 +147,9 @@ function ChatWidget() {
                     type="button"
                     onClick={() => setView(view === "history" ? "chat" : "history")}
                     title="Chat history"
+                    aria-label="Chat history"
                     className={cn(
-                      "flex h-8 w-8 items-center justify-center rounded-full transition-colors",
+                      "flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors",
                       view === "history"
                         ? "bg-white/20 text-white"
                         : "text-white/60 hover:bg-white/15 hover:text-white"
@@ -137,7 +163,8 @@ function ChatWidget() {
                     type="button"
                     onClick={handleNewChat}
                     title="New chat"
-                    className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/15 hover:text-white"
+                    aria-label="New chat"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/15 hover:text-white"
                   >
                     <Plus className="h-4 w-4" />
                   </button>
@@ -146,7 +173,7 @@ function ChatWidget() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
                   aria-label="Close chat"
                 >
                   <X className="h-4 w-4" />
@@ -171,7 +198,8 @@ function ChatWidget() {
                       <button
                         type="button"
                         onClick={() => setView("chat")}
-                        className="flex h-7 w-7 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+                        aria-label="Back to conversation"
+                        className="flex h-11 w-11 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </button>
@@ -208,7 +236,7 @@ function ChatWidget() {
                                 : "hover:bg-gray-50"
                             )}
                           >
-                            <p className="truncate pr-7 text-sm text-gray-700 font-medium leading-snug">
+                            <p className="truncate pr-10 text-sm text-gray-700 font-medium leading-snug">
                               {thread.preview}
                             </p>
                             <div className="mt-1 flex items-center gap-2">
@@ -220,7 +248,7 @@ function ChatWidget() {
                               type="button"
                               aria-label={`Delete conversation: ${thread.preview}`}
                               onClick={(e) => handleDeleteThread(e, thread._id)}
-                              className="absolute right-2.5 top-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded-full text-gray-400 transition-all group-hover:text-gray-600 hover:!text-red-400 hover:bg-red-50"
+                              className="absolute right-1 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full text-gray-400 transition-all group-hover:text-gray-600 hover:!text-red-400 hover:bg-red-50"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
@@ -252,7 +280,7 @@ function ChatWidget() {
 
       <motion.button type="button" whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
         onClick={() => setOpen(!open)} aria-expanded={open} aria-label={open ? "Close AI chat" : "Open AI chat"}
-        className="flex min-h-12 items-center gap-3 rounded-full border border-[#cbb68e] bg-[#243329] px-4 py-3 text-[#fff2d9] shadow-xl">
+        className="ai-chat-launcher flex min-h-12 items-center gap-3 rounded-full border border-[#cbb68e] bg-[#243329] px-4 py-3 text-[#fff2d9] shadow-xl">
         {open ? <X size={20} /> : <Coffee size={20} />}
         <span className="hidden text-sm font-medium sm:inline">{open ? "Close" : "Ask Eman"}</span>
       </motion.button>

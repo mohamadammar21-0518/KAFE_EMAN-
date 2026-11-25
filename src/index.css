@@ -818,7 +818,7 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 .admin-workspace :where(h1) { letter-spacing: -.03em; }
 @media (max-width: 700px) {
   .site-main[data-home="false"] { padding-top: 64px; }
-  .site-shell form { padding: 1.25rem; }
+
   .site-shell form :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { font-size: 16px; }
   .cafe-modal :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { font-size: 16px; }
 }
@@ -845,3 +845,62 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
 
 .reservation-form .grid > *, .reservation-form .space-y-6 { min-width: 0; }
 .reservation-form select, .reservation-form input { max-width: 100%; }
+/* Responsive storefront and viewport-aware café assistant. */
+.site-shell, .site-main { min-width: 0; }
+.eman-spread > *, .eman-footer-grid > *, .eman-culture-layout > * { min-width: 0; }
+.eman-menu li h3 { min-width: 0; overflow-wrap: anywhere; }
+.ai-dialog { height: min(600px, calc(100dvh - 100px - env(safe-area-inset-bottom))); }
+.ai-chat-panel [role="log"] { scrollbar-gutter: stable; }
+.ai-chat-panel form { min-width: 0; }
+.ai-chat-panel textarea { font-size: 16px; }
+@media (max-width: 639px) {
+  .ai-widget[data-open="true"] {
+    inset: var(--chat-viewport-top, 0px) 0 auto;
+    height: var(--chat-viewport-height, 100dvh);
+    padding: max(.5rem, env(safe-area-inset-top)) max(.5rem, env(safe-area-inset-right)) max(.5rem, env(safe-area-inset-bottom)) max(.5rem, env(safe-area-inset-left));
+    background: #17251b66;
+    gap: 0;
+    overscroll-behavior: contain;
+  }
+  .ai-widget[data-open="true"] .ai-dialog { width: 100%; height: 100%; min-height: 0; border-radius: 20px; }
+  .ai-widget[data-open="true"] .ai-chat-launcher { display: none; }
+  .ai-chat-header { padding-inline: .75rem; }
+  .ai-chat-header > span { width: 32px; height: 32px; flex-shrink: 0; }
+  .ai-chat-header p.font-serif { font-size: 1.4rem; white-space: nowrap; }
+  .eman-spread { width: calc(100% - 2.5rem); padding-block: 4rem; gap: 2rem; }
+  .eman-spread h2, .eman-culture h2, .eman-invitation h2 { font-size: clamp(2rem, 9vw, 3.4rem); overflow-wrap: break-word; }
+  .eman-film h1 { font-size: clamp(2rem, 10vw, 3.4rem); }
+  .eman-film-content { padding: max(7rem, 17svh) 5vw 2rem; gap: 2rem; }
+  .eman-film-mark { font-size: 17vw; margin-top: 1rem; }
+  .eman-film-notes { flex-wrap: wrap; gap: 1rem; }
+  .eman-culture { width: calc(100% - 2.5rem); padding-block: 4rem; }
+  .eman-culture-layout { gap: 1rem; margin-top: 1.5rem; }
+  .eman-culture article { grid-template-columns: 1fr; gap: .5rem; padding-block: 1.5rem; }
+  .eman-feature > img, .eman-philosophy > img { height: auto; aspect-ratio: 4/5; }
+  .eman-menu li a > div { flex-wrap: wrap; column-gap: 1rem; row-gap: .5rem; font-size: 1.5rem; }
+  .eman-menu li h3 { flex: 1 1 12rem; }
+  .eman-menu-intro h2 { white-space: normal; font-size: clamp(3rem, 13vw, 5rem); padding-inline: 5vw; }
+  .eman-menu-intro > h2 { transform: none !important; }
+  .eman-contact-scene > div { padding: 2rem 1.25rem; }
+  .eman-contact-scene h2 { font-size: clamp(2.4rem, 11vw, 4rem); }
+  .eman-contact-scene .eman-link { margin-right: 1rem; }
+  .eman-footer-grid { grid-template-columns: 1fr; padding: 3rem 1.25rem; gap: 2rem; }
+  .eman-footer-photo { grid-column: auto; }
+  .eman-footer-links { grid-template-columns: 1fr 1fr; border-left: 0; border-top: 1px solid #e0e2da; padding: 1.5rem 0 0; font-size: 1.4rem; gap: 1rem; }
+  .eman-footer-mark { font-size: 18vw; text-align: center; }
+  .eman-footer-legal { padding-inline: 1.25rem; padding-bottom: 5rem; }
+  .eman-drawer { max-height: calc(100dvh - 64px); padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
+  .menu-retail-card__body { padding: .75rem; }
+  .menu-retail-card__title { font-size: .9rem; }
+  .menu-retail-card__price { font-size: .85rem; }
+}
+/* Keep the café launcher clear of checkout and product dialogs. */
+body:has([aria-modal="true"]) .ai-widget[data-open="false"] { visibility: hidden; }
+@media (max-width: 799px) {
+  .site-main[data-home="false"] { padding-top: 64px; }
+}
+@media (max-width: 639px) {
+  .menu-cb-page section[id^="menu-"] { scroll-margin-top: 5rem; }
+  .site-shell form :where(label, .grid > *) { min-width: 0; }
+  .site-shell form :where(input, select, textarea) { max-width: 100%; }
+}

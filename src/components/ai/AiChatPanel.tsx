@@ -34,7 +34,7 @@ export function AiChatPanel({ activeThreadId, onThreadCreated }: AiChatPanelProp
   const [showQuestions, setShowQuestions] = useState(false);
   const [input, setInput] = useState("");
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const conversationRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -44,11 +44,12 @@ export function AiChatPanel({ activeThreadId, onThreadCreated }: AiChatPanelProp
   }, [threadId, onThreadCreated]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: reducedMotion ? "instant" : "smooth" });
+    const log = conversationRef.current;
+    log?.scrollTo({ top: log.scrollHeight, behavior: reducedMotion ? "instant" : "smooth" });
   }, [messages, isLoading, reducedMotion]);
 
   useEffect(() => {
-    if (isSignedIn) inputRef.current?.focus();
+    if (isSignedIn && window.matchMedia("(min-width: 640px)").matches) inputRef.current?.focus({ preventScroll: true });
   }, [isSignedIn]);
 
   // Auto-grow textarea
@@ -80,10 +81,10 @@ export function AiChatPanel({ activeThreadId, onThreadCreated }: AiChatPanelProp
   const isEmpty = !historyLoading && messages.length === 0;
 
   return (
-    <div className="flex h-full flex-col bg-[#faf6ed]">
+    <div className="ai-chat-panel flex h-full min-w-0 flex-col bg-[#faf6ed]">
 
       {/* ── Messages ── */}
-      <div role="log" aria-label="Conversation" className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 space-y-3">
+      <div ref={conversationRef} role="log" aria-label="Conversation" className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 space-y-3">
 
         {historyLoading && <p role="status" className="text-sm text-gray-500">Loading conversation…</p>}
         {/* Welcome */}
@@ -172,7 +173,7 @@ export function AiChatPanel({ activeThreadId, onThreadCreated }: AiChatPanelProp
           </div>
         )}
 
-        <div ref={messagesEndRef} />
+
       </div>
 
       {/* ── Input ── */}
@@ -185,7 +186,7 @@ export function AiChatPanel({ activeThreadId, onThreadCreated }: AiChatPanelProp
             <button type="button" title="Suggested questions" aria-label="Suggested questions"
               aria-expanded={showQuestions || !!error} disabled={isLoading}
               onClick={() => setShowQuestions((visible) => !visible)}
-              className="mb-1 text-[#355927]"><List className="h-5 w-5" /></button>
+              className="flex h-11 w-11 shrink-0 items-center justify-center text-[#355927]"><List className="h-5 w-5" /></button>
           )}
           <textarea
             ref={inputRef}
@@ -196,14 +197,14 @@ export function AiChatPanel({ activeThreadId, onThreadCreated }: AiChatPanelProp
             aria-label="Message the café assistant"
             maxLength={2000}
             rows={1}
-            className="flex-1 resize-none bg-transparent text-[13px] text-gray-800 placeholder:text-gray-400 focus:outline-none disabled:opacity-50 leading-relaxed"
+            className="min-w-0 flex-1 resize-none bg-transparent text-base sm:text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none disabled:opacity-50 leading-relaxed"
             disabled={isLoading || historyLoading}
             style={{ maxHeight: "120px" }}
           />
           <button
             type="submit"
             disabled={isLoading || historyLoading || !input.trim()}
-            className="mb-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white shadow transition-all disabled:cursor-not-allowed disabled:opacity-30"
+            className="mb-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white shadow transition-all disabled:cursor-not-allowed disabled:opacity-30"
             style={{ background: "linear-gradient(135deg, #355927 0%, #4a7a35 100%)" }}
             aria-label="Send"
           >
@@ -249,7 +250,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
       {/* Bubble */}
       <div
         className={cn(
-          "min-w-0 max-w-[85%] [overflow-wrap:anywhere] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed shadow-sm",
+          "min-w-0 max-w-[calc(100%-2.5rem)] [overflow-wrap:anywhere] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm",
           isUser
             ? "rounded-br-sm text-white"
             : "rounded-bl-sm bg-white text-gray-700 ring-1 ring-gray-100"

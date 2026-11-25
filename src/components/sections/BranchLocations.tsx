@@ -28,7 +28,7 @@ export function BranchLocations() {
             </figcaption>
           </figure>
         )}
-        <ul className="grid gap-4 md:grid-cols-3 lg:gap-6">
+        <ul className="grid gap-4 lg:grid-cols-3 lg:gap-6">
           {branches.map(({ id, label, address, hours, concept }, index) => (
             <motion.li
               key={id}

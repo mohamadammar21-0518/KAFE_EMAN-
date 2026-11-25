@@ -11,6 +11,7 @@
 import type * as adminDashboard from "../adminDashboard.js";
 import type * as admins from "../admins.js";
 import type * as ai_adminAlert from "../ai/adminAlert.js";
+import type * as ai_cafeScope from "../ai/cafeScope.js";
 import type * as ai_channels_twilio from "../ai/channels/twilio.js";
 import type * as ai_channels_vapi from "../ai/channels/vapi.js";
 import type * as ai_chat from "../ai/chat.js";
@@ -86,6 +87,7 @@ declare const fullApi: ApiFromModules<{
   adminDashboard: typeof adminDashboard;
   admins: typeof admins;
   "ai/adminAlert": typeof ai_adminAlert;
+  "ai/cafeScope": typeof ai_cafeScope;
   "ai/channels/twilio": typeof ai_channels_twilio;
   "ai/channels/vapi": typeof ai_channels_vapi;
   "ai/chat": typeof ai_chat;

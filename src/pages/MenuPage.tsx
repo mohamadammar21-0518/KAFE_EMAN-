@@ -185,7 +185,7 @@ export function MenuPage() {
 
       <section className="pb-20 sm:pb-24">
         <div className="container-main">
-          <div className="sticky top-[72px] z-20 -mx-5 border-b border-outline-variant/25 bg-white/95 px-5 py-4 backdrop-blur-md sm:top-[88px] sm:-mx-8 sm:px-8 md:top-[96px] lg:-mx-10 lg:px-10">
+          <div className="menu-filter-bar relative sm:sticky sm:top-16 min-[1201px]:top-[76px] z-20 -mx-5 border-b border-outline-variant/25 bg-white/95 px-5 py-4 backdrop-blur-md sm:-mx-8 sm:px-8 lg:-mx-10 lg:px-10">
             <div className="mx-auto max-w-[1200px]">
               <MenuPageToolbar
                 activeCategory={activeCategory}
