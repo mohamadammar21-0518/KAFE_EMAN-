@@ -1,0 +1,8 @@
+flowchart LR
+  staticMode[Static preview]
+  staticMode --> staticFallback[content.ts fallback]
+  staticMode --> staticLimits[No checkout or account DB]
+  fullMvp[Full MVP Convex and Clerk]
+  fullMvp --> liveData[Live Convex data]
+  fullMvp --> clerkJwt[Clerk JWT to Convex]
+  fullMvp --> fullFeatures[Cart orders loyalty admin]

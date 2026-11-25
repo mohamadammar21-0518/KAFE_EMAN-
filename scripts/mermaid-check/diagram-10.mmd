@@ -1,0 +1,27 @@
+flowchart TD
+  Start([User opens AI chat]) --> LoggedIn{Clerk session?}
+
+  LoggedIn -->|No| AskLogin["AI: Please log in to your account first. - Show Log in button"]
+  AskLogin --> Clerk["Clerk sign-in"]
+  Clerk --> Start
+
+  LoggedIn -->|Yes| LoadCtx["Load Convex user - email / phone / name / branch"]
+  LoadCtx --> HasProfile{Email + phone on file?}
+
+  HasProfile -->|Missing| Collect["AI asks: - confirm email & phone"]
+  Collect --> Save["users.updateProfile"]
+  Save --> Ready
+
+  HasProfile -->|Yes| Ready[AI ready - personalized greeting - Hey firstName, how can I help?]
+
+  Ready --> Intent{User message}
+  Intent -->|Order status| Track["Query myOrders + - latest active order"]
+  Track --> Reply1["AI explains status - pending / preparing / ready"]
+  Intent -->|Menu / hours| Reply2["RAG or branch data - from Convex / content"]
+  Intent -->|Other| Reply3["GROQ general reply - with user context in system prompt"]
+
+  subgraph proactive [Proactive - planned]
+    AdminReady["Admin sets order to ready"] --> Push["Convex mutation hook"]
+    Push --> GroqMsg["GROQ formats friendly line"]
+    GroqMsg --> PopCust["Popup + chat message: - Hey Name, your order X is ready!"]
+  end

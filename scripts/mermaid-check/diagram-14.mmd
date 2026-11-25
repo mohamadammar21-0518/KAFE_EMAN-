@@ -1,0 +1,25 @@
+flowchart TD
+  AStart([Open admin login]) --> Login["admins.login username and password"]
+  Login --> Session["Token in localStorage - adminSessions row"]
+  Session --> Layout["AdminLayout validates session"]
+
+  Layout --> Hub{Choose area}
+  Hub --> Branches["Branches - add / edit / delete / currency per branch"]
+  Hub --> Menu["Menu - per branch: categories + products + image URL"]
+  Hub --> OrdersProc["Orders - Processing - pending / accepted / preparing / ready"]
+  Hub --> OrdersTrack["Orders - Track - accepted / preparing / ready"]
+  Hub --> OrdersHist["Orders - History - delivered / cancelled"]
+  Hub --> DashTables["Dashboard - Convex table inventory"]
+  Hub --> Finance["Finance - filter branch + period - revenue in branch currency"]
+  Hub --> Res["Reservations - confirm / cancel"]
+  Hub --> Users["Users - Clerk customers in Convex"]
+  Hub --> Faqs["FAQs CRUD"]
+  Hub --> Messages["Contact messages inbox"]
+  Hub --> Content["Site content / settings"]
+  Hub --> TestiAdmin["Testimonials - accept / reject / staff quotes"]
+
+  OrdersProc --> Modal["Order detail modal - next step only / cancel + reason"]
+  Modal --> Update["orders.updateStatus - forward-only / cancellationReason"]
+  Update --> Loyalty["Points on mark paid if not already applied"]
+  Update --> AINotify["Planned: GROQ notifies customer - order ready"]
+  Hub --> AIAlert["Planned: AI popup on new orders"]

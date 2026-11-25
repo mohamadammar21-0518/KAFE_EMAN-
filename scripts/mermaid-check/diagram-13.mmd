@@ -1,0 +1,23 @@
+flowchart TD
+  signIn["Clerk sign-in via modal or login page"] --> syncProfile["users.syncProfile creates users row"]
+  syncProfile --> gate{OnboardingGate needs onboarding?}
+
+  gate -->|Yes| onboardingModal[OnboardingModal]
+  gate -->|No| accountDash[Account dashboard]
+
+  onboardingModal --> profileStep[Name DOB country region city address]
+  profileStep --> saveProfile[users.updateProfile and setHomeBranch]
+  saveProfile --> phoneStep[Phone and verify code]
+  phoneStep --> verifyPhone[sendPhoneCode and verifyPhoneCode]
+  verifyPhone --> finishOnboarding[users.completeOnboarding]
+  finishOnboarding --> accountDash
+
+  subgraph addressFields [Address fields]
+    pickCountry[Country select]
+    pickRegion[Region select]
+    pickCity[City select]
+    pickStreet[Street and custom address]
+    pickCountry --> pickRegion --> pickCity --> pickStreet
+  end
+
+  profileStep --> pickCountry

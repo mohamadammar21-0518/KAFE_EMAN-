@@ -1,0 +1,72 @@
+erDiagram
+  branches ||--o{ menuCategories : has
+  menuCategories ||--o{ menuItems : contains
+  branches ||--o{ orders : receives
+  branches ||--o{ reservations : receives
+  branches ||--o{ users : home_branch
+  users ||--o{ orders : places
+  users ||--o{ coupons : earns
+  users ||--o{ phoneVerifications : verifies
+  users ||--o{ userFavorites : saves
+  users ||--o{ testimonials : submits
+  admins ||--o{ adminSessions : has
+
+  branches {
+    string slug
+    string label
+    string currency
+    boolean active
+  }
+  menuCategories {
+    string branchSlug
+    string label
+  }
+  menuItems {
+    string name
+    number price
+    id categoryId
+    string branchSlug
+  }
+  users {
+    string clerkUserId
+    string email
+    string branchSlug
+    string region
+    string city
+    number points
+    boolean onboardingComplete
+  }
+  orders {
+    string orderNumber
+    string branchSlug
+    string currency
+    string status
+    string cancellationReason
+    string paymentStatus
+  }
+  coupons {
+    string type
+    boolean redeemed
+  }
+  reservations {
+    string branchSlug
+    string status
+  }
+  contactMessages {
+    string referenceId
+    string status
+  }
+  admins {
+    string username
+    string role
+  }
+  testimonials {
+    string status
+    number rating
+    string source
+  }
+  userFavorites {
+    string clerkUserId
+    id menuItemId
+    string branchSlug
+  }

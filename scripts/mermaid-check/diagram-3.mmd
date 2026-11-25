@@ -1,0 +1,27 @@
+flowchart TB
+  subgraph browser [Browser - React SPA]
+    Store["Storefront + Account"]
+    Admin["Admin dashboard"]
+    AIClient["AI chat widget - floating window"]
+    AIAdmin["Admin alert toasts - new order popups"]
+  end
+
+  subgraph convex [Convex]
+    DB[("Database")]
+    Events["Order events - insert / status change"]
+    AIActions["ai/* actions - planned"]
+  end
+
+  subgraph groq [GROQ API - planned]
+    LLM["Chat model - Llama / Mixtral etc."]
+  end
+
+  Store --> DB
+  Admin --> DB
+  AIClient -->|"Clerk JWT"| AIActions
+  AIAdmin -->|"adminToken"| AIActions
+  Events --> AIActions
+  AIActions --> LLM
+  AIActions --> DB
+  LLM --> AIClient
+  LLM --> AIAdmin

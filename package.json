@@ -1,0 +1,49 @@
+{
+  "name": "kafe-eman",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "convex:sync": "convex dev --once && convex run migrations/runAll:run",
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "typecheck": "tsc -b tsconfig.app.json tsconfig.node.json",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "info": "bun pm pkg get name version",
+    "convex:dev": "bunx convex dev",
+    "convex:deploy": "bunx convex deploy",
+    "convex:seed": "npx convex run seed:seed",
+    "test:cafe": "node --test scripts/test-cafe.mjs",
+    "test:health": "npx convex run health:ping",
+    "test:smoke": "npx convex run smoke:run",
+    "test:api": "npm run test:health && npm run test:smoke",
+    "test:e2e": "npm run convex:sync && npm run test:api && npm run typecheck && npm run build"
+  },
+  "dependencies": {
+    "@clerk/react": "^6.7.2",
+    "convex": "^1.21.0",
+    "framer-motion": "^12.6.2",
+    "lucide-react": "^0.487.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.4.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@tailwindcss/vite": "^4.0.14",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.21.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
+    "tailwindcss": "^4.0.14",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.24.1",
+    "vite": "^6.2.0"
+  }
+}

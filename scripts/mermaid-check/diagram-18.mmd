@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant S as Staff
+  participant UI as Admin UI
+  participant X as Convex
+
+  S->>UI: /admin/login
+  UI->>X: admins.login
+  X->>X: PBKDF2 verify + adminSessions
+  X-->>UI: adminToken
+  S->>UI: Open Orders / Finance
+  UI->>X: orders.list (adminToken)
+  X-->>UI: orders data

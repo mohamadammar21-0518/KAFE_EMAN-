@@ -1,0 +1,17 @@
+flowchart LR
+  subgraph customer [Customer path]
+    C1[Clerk sign-in] --> C2[syncProfile to users]
+    C2 --> C3[Onboarding optional]
+    C3 --> C4[Menu + branch currency]
+    C4 --> C5[Cart checkout]
+    C5 --> C6["orders.create"]
+    C6 --> C7[(orders users coupons)]
+  end
+
+  subgraph admin [Admin path]
+    A1["admins.login"] --> A2[adminSessions]
+    A2 --> A3[Protected APIs + adminToken]
+    A3 --> C7
+    A3 --> A4["updateStatus - forward-only pipeline"]
+    A4 --> C7
+  end

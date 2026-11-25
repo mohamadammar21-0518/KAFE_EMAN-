@@ -1,0 +1,7 @@
+sequenceDiagram
+  participant A as AdminFinancePage
+  participant X as financeSummary
+
+  A->>X: adminToken, period, branchSlug
+  X->>X: Filter paid orders in period
+  X-->>A: revenue, trend, transactions (with currency)

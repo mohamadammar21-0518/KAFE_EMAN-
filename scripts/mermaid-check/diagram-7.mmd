@@ -1,0 +1,20 @@
+stateDiagram-v2
+  [*] --> pending: Checkout
+  pending --> confirmed: Accept
+  pending --> cancelled: Cancel + reason
+  confirmed --> preparing: Start preparing
+  confirmed --> cancelled: Cancel + reason
+  preparing --> ready: Ready for pickup
+  preparing --> cancelled: Cancel + reason
+  ready --> completed: Mark delivered
+  completed --> [*]
+  cancelled --> [*]
+
+  note right of confirmed
+    DB value: confirmed
+    UI label: Accepted
+  end note
+  note right of completed
+    DB value: completed
+    UI label: Delivered
+  end note

@@ -1,0 +1,8 @@
+flowchart LR
+  Admin["Admin to Branches - set currency e.g. USD, MYR"] --> DB[("branches.currency")]
+  DB --> Store["Storefront - useBranchCurrency()"]
+  DB --> Menu["Menu prices displayed"]
+  DB --> Cart["Cart + checkout"]
+  Cart --> Order["orders.currency snapshot"]
+  Order --> Finance["Admin Finance - per-branch totals"]
+  Order --> History["Account order history"]

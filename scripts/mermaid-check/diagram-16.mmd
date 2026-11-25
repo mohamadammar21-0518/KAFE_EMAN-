@@ -1,0 +1,40 @@
+flowchart LR
+  subgraph storefront [Storefront]
+    S1[Branch picker] --> branches
+    S2[Menu and Cart] --> menuCategories
+    S2 --> menuItems
+    S3[Checkout] --> orders
+    S3 --> users
+    S3 --> coupons
+    S4[Account] --> users
+    S4 --> orders
+    S5[About] --> teamMembers
+    S5 --> stats
+    S6[Contact and FAQ] --> contactMessages
+    S6 --> faqs
+    S6 --> siteSettings
+    S7[Reserve] --> reservations
+    S8["Home carousel + testimonial section feedback"] --> testimonials
+    S9[Menu hearts] --> userFavorites
+  end
+
+  subgraph adminPanel [Admin panel]
+    A1[Branches and Menu] --> branches
+    A1 --> menuCategories
+    A1 --> menuItems
+    A2[Orders and Finance] --> orders
+    A3[Users] --> users
+    A4[Login] --> admins
+    A4 --> adminSessions
+    A5[Reservations Messages FAQ Content] --> reservations
+    A5 --> contactMessages
+    A5 --> faqs
+    A5 --> siteSettings
+    A6[Testimonials] --> testimonials
+  end
+
+  subgraph authLayer [Auth layer]
+    Clerk[Clerk JWT] --> users
+    Clerk --> phoneVerifications
+    Token[adminToken] --> adminSessions
+  end

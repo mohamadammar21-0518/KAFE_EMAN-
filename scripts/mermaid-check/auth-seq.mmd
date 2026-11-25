@@ -1,0 +1,18 @@
+sequenceDiagram
+  participant U as Customer
+  participant UI as React app
+  participant C as Clerk
+  participant X as Convex
+
+  U->>UI: Click Log in
+  UI->>UI: SignInModal (stay on page)
+  U->>C: Google email or phone
+  C-->>UI: Session + JWT
+  UI->>X: users.syncProfile
+  alt First visit
+    UI->>UI: OnboardingModal
+    U->>X: completeOnboarding
+  end
+  U->>UI: Add to cart to checkout
+  UI->>X: orders.create (JWT)
+  X-->>UI: orderNumber, points

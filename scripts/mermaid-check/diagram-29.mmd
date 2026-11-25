@@ -1,0 +1,19 @@
+flowchart LR
+  subgraph homeSection [Home testimonial section]
+    TC[TestimonialCarousel - AnimatePresence slide transitions]
+    FS[FeedbackCtaStrip - sand panel inline with section]
+    FM[FeedbackSubmitModal - AdminModal via createPortal]
+    TC --> FS
+    FS --> FM
+  end
+
+  subgraph convexLayer [Convex testimonials]
+    LP[listPublished - public query]
+    SUB[submit - Clerk required]
+    ADM[listForAdmin accept reject createStaff]
+  end
+
+  FM -->|signed in| SUB
+  SUB -->|pending| ADM
+  ADM -->|accept| LP
+  LP --> TC

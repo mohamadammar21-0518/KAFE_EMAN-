@@ -1,0 +1,22 @@
+sequenceDiagram
+  participant G as Guest (Clerk)
+  participant H as Home TestimonialCarousel
+  participant M as FeedbackSubmitModal
+  participant X as testimonials
+  participant A as AdminTestimonialsPage
+
+  H->>X: listPublished (accepted + staff)
+  X-->>H: Carousel slides (fallback TESTIMONIALS if empty)
+  G->>H: Share experience (FeedbackCtaStrip)
+  alt Not signed in
+    H->>G: Clerk openSignIn
+  else Signed in
+    G->>M: Rating title body optional photo
+    M->>X: submit + storage upload URL
+    X->>X: Insert status pending
+  end
+  A->>X: listForAdmin (adminToken)
+  A->>X: accept
+  X->>X: status accepted
+  H->>X: listPublished
+  X-->>H: New slide on carousel

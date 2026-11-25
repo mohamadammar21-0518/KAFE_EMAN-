@@ -1,0 +1,15 @@
+flowchart LR
+  subgraph orderEvents [Convex triggers - planned]
+    O1[New order] --> N1[Notify admin AI]
+    O2[Status to ready] --> N2[Notify customer AI]
+  end
+
+  subgraph groqFlow [GROQ - planned]
+    N1 --> G[GROQ generates message]
+    N2 --> G
+    G --> P1[Admin popup]
+    G --> P2[Customer chat bubble]
+  end
+
+  C6[(orders)] --> O1
+  C6 --> O2

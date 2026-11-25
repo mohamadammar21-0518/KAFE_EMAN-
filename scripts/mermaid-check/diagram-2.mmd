@@ -1,0 +1,44 @@
+flowchart TB
+  subgraph browser [Browser - React SPA Vite]
+    subgraph public [Public site - Layout shell]
+      Pages["Pages - Home / Menu / About / Contact / Legal"]
+      BranchCtx["BranchContext - localStorage + currency"]
+      AuthUI["Clerk SignInModal / Onboarding"]
+      Cart["CartProviderAuthed / CartDrawer"]
+      Acct["AccountPage / favourites"]
+      Testi["TestimonialCarousel - slide carousel + FeedbackCtaStrip"]
+      Modals["Portaled modals - AppModal / AdminModal z-300"]
+    end
+    subgraph adminUI [Admin - separate layout]
+      AdminLogin["/admin/login"]
+      AdminPages["Dashboard charts / Orders / Testimonials / …"]
+      AdminToken["adminToken in localStorage"]
+    end
+    Providers["AppProviders - ClerkProvider + ConvexProvider"]
+  end
+
+  subgraph clerk [Clerk - customers only]
+    ClerkAuth["OAuth / email / phone - JWT template aud: convex"]
+  end
+
+  subgraph convex [Convex cloud]
+    AuthCfg["auth.config.ts"]
+    API["queries / mutations / storage"]
+    DB[("17 tables - see SCHEMA.md")]
+  end
+
+  Pages --> BranchCtx
+  Pages --> Providers
+  Testi --> Modals
+  AuthUI --> Providers
+  Cart --> Providers
+  Acct --> Providers
+  AdminLogin --> Providers
+  AdminPages --> AdminToken
+  AdminToken --> API
+
+  Providers --> ClerkAuth
+  ClerkAuth -->|"Bearer JWT"| AuthCfg
+  AuthCfg --> API
+  API --> DB
+  Testi -->|"listPublished / submit"| API

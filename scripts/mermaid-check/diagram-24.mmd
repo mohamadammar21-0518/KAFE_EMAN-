@@ -1,0 +1,21 @@
+sequenceDiagram
+  participant S as Staff
+  participant UI as OrderDetailModal
+  participant X as "orders.updateStatus"
+  participant F as orderStatusFlow
+
+  S->>UI: Open order (pending)
+  UI->>UI: allowedOrderStatusActions to Accept, Cancel
+  S->>UI: Accept
+  UI->>X: status confirmed
+  X->>F: assertValidStatusTransition
+  F-->>X: OK
+  X->>X: patch orders
+
+  S->>UI: Cancel (from preparing)
+  UI->>UI: Prompt cancellationReason
+  UI->>X: status cancelled + reason
+  X->>F: assert + require reason
+  X->>X: patch orders.cancellationReason
+
+  Note over S,X: Cannot set pending after confirmed

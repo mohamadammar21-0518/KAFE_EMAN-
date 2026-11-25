@@ -1,0 +1,49 @@
+flowchart TB
+  subgraph client [Browser - storefront]
+    Fab[AI chat FAB]
+    Panel[Chat panel]
+    GuestUI[Login required message + Log in CTA]
+  end
+
+  subgraph clerk [Clerk]
+    Session[JWT session]
+  end
+
+  subgraph convex [Convex backend - planned]
+    AuthGate[requireIdentity in ai.chat]
+    Ctx[buildCustomerContext]
+    QOrders[users.myOrders query]
+    QUser[users.current / profile]
+    ChatAction[ai.chat action]
+    Threads[(aiThreads / aiMessages - planned)]
+  end
+
+  subgraph data [Existing data]
+    Users[(users)]
+    Orders[(orders)]
+    Branches[(branches)]
+  end
+
+  subgraph groq [GROQ Cloud]
+    LLM[chat/completions]
+  end
+
+  Fab --> Panel
+  Panel --> Session
+  Session --> AuthGate
+
+  AuthGate -->|no session| GuestUI
+  GuestUI --> Session
+
+  AuthGate -->|signed in| Ctx
+  Ctx --> QUser
+  Ctx --> QOrders
+  QUser --> Users
+  QOrders --> Orders
+  Orders --> Branches
+  Ctx --> ChatAction
+  Panel -->|user message| ChatAction
+  ChatAction --> LLM
+  LLM --> ChatAction
+  ChatAction --> Threads
+  ChatAction --> Panel

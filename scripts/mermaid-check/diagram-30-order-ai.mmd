@@ -1,0 +1,58 @@
+flowchart TD
+  subgraph customer [Customer]
+    Checkout[Checkout - orders.create]
+  end
+
+  subgraph convex [Convex backend - planned]
+    OrderRow[(orders)]
+    HookNew[onOrderCreated hook]
+    HookReady[onStatusReady hook]
+    LearnStore[(aiOrderInsights - planned)]
+    NotifyJob[ai.notifyCustomer action]
+  end
+
+  subgraph groq [GROQ - reasoning and copy]
+    AlertAdmin[Format admin alert]
+    Analyze[Analyze order after accept]
+    MsgReady[Draft ready-for-pickup message]
+  end
+
+  subgraph adminUI [Admin / staff UI]
+    Popup[AI popup or toast - new order]
+    Accept{Accept or reject?}
+    RejectPath[orders.updateStatus - cancelled + reason]
+    AcceptPath[orders.updateStatus - confirmed]
+  end
+
+  subgraph external [External channels - planned]
+    Twilio[SMS via Twilio Messages API]
+    Vapi[Outbound call via VAPI]
+  end
+
+  subgraph owner [Order owner]
+    Phone[SMS to users.phone]
+    Call[Voice call to users.phone]
+  end
+
+  Checkout --> OrderRow
+  OrderRow --> HookNew
+  HookNew --> AlertAdmin
+  AlertAdmin --> Popup
+  Popup --> Accept
+
+  Accept -->|Reject| RejectPath
+  RejectPath --> OrderRow
+
+  Accept -->|Accept| AcceptPath
+  AcceptPath --> OrderRow
+  AcceptPath --> Analyze
+  Analyze --> LearnStore
+
+  AcceptPath --> Preparing[Staff: preparing to ready]
+  Preparing --> HookReady
+  HookReady --> MsgReady
+  MsgReady --> NotifyJob
+  NotifyJob --> Twilio
+  NotifyJob --> Vapi
+  Twilio --> Phone
+  Vapi --> Call

@@ -1,0 +1,9 @@
+sequenceDiagram
+  participant U as Customer
+  participant A as AccountPage
+  participant X as "users.myOrders"
+
+  U->>A: Track orders
+  A->>X: Clerk JWT
+  X-->>A: Active orders sorted by pipeline
+  A-->>U: Progress bar pending to accepted to preparing to ready to delivered

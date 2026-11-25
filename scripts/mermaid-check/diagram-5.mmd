@@ -1,0 +1,34 @@
+flowchart TB
+  subgraph routes [React Router v7]
+    Public["Public routes: home menu account login terms privacy reservation"]
+    Admin["Admin routes: login and dashboard"]
+  end
+
+  subgraph providers [Layout providers]
+    AP[AppProviders - Clerk + Convex]
+    BC[BranchContext]
+    Cart[CartProviderAuthed]
+    Onb[OnboardingProvider]
+    Splash[AppSplashGate]
+  end
+
+  subgraph ui [Key UI modules]
+    Nav[Navbar + branch picker]
+    SignIn[SignInModal portaled via Clerk]
+    OnboardM[OnboardingModal]
+    CartD[CartDrawer]
+    TestiC[TestimonialCarousel - AnimatePresence slides]
+    FeedM[FeedbackSubmitModal - AdminModal portal]
+    Legal[LegalDocumentPage]
+    Dash[DashboardCharts admin]
+  end
+
+  Public --> Splash --> AP
+  Admin --> AP
+  AP --> BC
+  AP --> Cart
+  AP --> Onb
+  Nav --> SignIn
+  Onb --> OnboardM
+  Cart --> CartD
+  TestiC --> FeedM

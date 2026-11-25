@@ -1,0 +1,11 @@
+sequenceDiagram
+  participant S as Staff
+  participant X as "orders.updateStatus"
+  participant AI as GROQ action
+  participant C as Customer UI
+
+  S->>X: Mark order ready
+  X->>X: Patch order status
+  X->>AI: Trigger notify (userId, order)
+  AI->>AI: Build context + GROQ message
+  AI-->>C: Toast + chat: Hey Name, order X is ready!

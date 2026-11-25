@@ -1,0 +1,10 @@
+sequenceDiagram
+  participant U as Customer
+  participant C as Clerk
+  participant X as "Convex users table"
+
+  U->>C: Sign in
+  C-->>U: Session
+  U->>X: users.syncProfile from OnboardingGate SignInModal AccountPage
+  X->>X: getOrCreateUser by clerkUserId
+  Note over X: Row visible in Convex dashboard

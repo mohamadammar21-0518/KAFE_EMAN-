@@ -1,0 +1,11 @@
+sequenceDiagram
+  participant U as Customer
+  participant X as "orders.create"
+  participant AI as GROQ action
+  participant A as Admin UI
+
+  U->>X: Checkout
+  X->>X: Insert order
+  X->>AI: Trigger admin alert
+  AI->>AI: Format summary via GROQ
+  AI-->>A: Popup - new order from Name, branch, total

@@ -1,0 +1,12 @@
+flowchart TD
+  AStart([Staff on admin dashboard]) --> AAuth{adminToken valid?}
+  AAuth -->|No| ALogin["/admin/login"]
+  AAuth -->|Yes| AListen["Subscribe to new orders - branch filter optional"]
+
+  NewOrder["Customer places order - orders.create"] --> Event["Convex: new order row"]
+  Event --> AListen
+  AListen --> GroqA["GROQ: short alert text"]
+  GroqA --> Popup["Popup / toast on admin UI: - New order from Name / Branch / Total"]
+
+  StatusChange["Staff updates status - e.g. ready"] --> Event2["orders.updateStatus"]
+  Event2 --> CustNotify["Trigger customer AI notify - see customer flow"]

@@ -1,0 +1,31 @@
+flowchart TD
+  Start([Open website]) --> BranchCheck{Branch saved?}
+  BranchCheck -->|No| Picker[Branch picker modal]
+  BranchCheck -->|Yes| Browse
+  Picker --> Browse["Browse Home Menu About Contact"]
+
+  Browse --> Action{User action}
+  Action -->|Reserve table| ResForm["Reservation form to reservations.create"]
+  Action -->|Contact| ContactForm["Contact form to contactMessages.submit"]
+  Action -->|Add to menu item| AuthGate{Signed in?}
+
+  AuthGate -->|No| SignIn["Clerk sign-in popup - or /login page"]
+  SignIn --> Onboard{Onboarding complete?}
+  Onboard -->|No| Wizard["OnboardingModal - name / DOB / country/region/city/address / phone verify"]
+  Wizard --> AddCart
+  Onboard -->|Yes| AddCart[Add to cart]
+  AuthGate -->|Yes| AddCart
+
+  AddCart --> Drawer[Open cart drawer]
+  Drawer --> Checkout[Place order - orders.create]
+  Checkout --> Paid["Order stored with branch currency - loyalty points + coupons"]
+  Paid --> Account["/account - track / history / rewards / profile"]
+
+  Action -->|Log in / Account| NavLogin["Navbar Log in to Clerk popup"]
+  NavLogin --> SignIn
+  Action -->|Signed in - Account link| Account
+  Action -->|Home testimonial section| Feed["FeedbackCtaStrip to FeedbackSubmitModal - portaled AdminModal"]
+  Feed -->|testimonials.submit| Pending["status: pending"]
+  Action -->|Footer legal| Legal["/terms / /privacy - LegalDocumentPage"]
+  Action -->|Menu heart| Fav["userFavorites.toggle"]
+  Action -->|AI chat - planned| AIChat["GROQ assistant - login required / track orders"]

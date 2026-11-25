@@ -1,0 +1,27 @@
+flowchart TB
+  subgraph customerAuth [Customer auth - Clerk]
+    CUser[Website visitor]
+    Clerk[Clerk session + JWT aud: convex]
+    UsersTable[(users table)]
+    CUser --> Clerk
+    Clerk -->|users.syncProfile| UsersTable
+  end
+
+  subgraph staffAuth [Staff auth - Convex only]
+    Staff[Café staff]
+    AdminLogin["/admin/login"]
+    AdminsTable[(admins table)]
+    SessionsTable[(adminSessions)]
+    Staff --> AdminLogin
+    AdminLogin --> AdminsTable
+    AdminLogin --> SessionsTable
+  end
+
+  subgraph shared [Shared backend]
+    ConvexAPI[Convex queries & mutations]
+    OrdersTable[(orders menu and more)]
+  end
+
+  Clerk --> ConvexAPI
+  SessionsTable -->|adminToken| ConvexAPI
+  ConvexAPI --> OrdersTable
